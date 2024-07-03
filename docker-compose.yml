@@ -1,0 +1,23 @@
+version: '3'
+
+# 查看ssh root密码`docker exec -it ubuntu-test-environment cat /etc/enterpoint.env`
+
+services:
+  ubuntu-test-environment:
+    image: brettdean/ubuntu-test-environment:python3.12.4-arm
+    container_name: ubuntu-test-environment
+    ports:
+      - "2222:22"   # ssh端口
+      - "8880:80"   # nginx端口
+    network_mode: bridge
+    hostname: ubuntu-test-environment
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home:/home # 可选
+      # 持久化 # 可选
+      # - ./etc:/etc
+      # - ./root:/root
+      # 第一次启动的时候先把上面2行注释掉，启动后将文件复制出来，用下面这2个命令:
+      # docker cp ubuntu-test-environment:/etc ./etc
+      # docker cp ubuntu-test-environment:/root ./root
+      # 复制完成以后，再取消注释那2行，重启容器`docker-compose down && docker-compose up -d`，就会直接用其中的数据
