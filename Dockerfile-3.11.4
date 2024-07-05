@@ -66,25 +66,25 @@ RUN npm install --global yarn
 RUN yarn global add vite
 RUN yarn add @vitejs/plugin-vue --dev
 
-# 下载并解压 Python 3.12.4
+# 下载并解压 Python 3.11.4
 RUN mkdir /tmp/python && \
     cd /tmp/python && \
-    curl -O https://www.python.org/ftp/python/3.12.4/Python-3.12.4.tgz && \
-    tar -xvzf Python-3.12.4.tgz && \
-    cd Python-3.12.4 && \
-    ./configure --prefix=/opt/python/3.12.4 --enable-shared --enable-optimizations --enable-ipv6 LDFLAGS=-Wl,-rpath=/opt/python/3.12.4/lib,--disable-new-dtags && \
+    curl -O https://www.python.org/ftp/python/3.11.4/Python-3.11.4.tgz && \
+    tar -xvzf Python-3.11.4.tgz && \
+    cd Python-3.11.4 && \
+    ./configure --prefix=/opt/python/3.11.4 --enable-shared --enable-optimizations --enable-ipv6 LDFLAGS=-Wl,-rpath=/opt/python/3.11.4/lib,--disable-new-dtags && \
     make && \
     make install
 
 # 加入到 PATH 中
-RUN echo 'PATH="/opt/python/3.12.4/bin:$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"' >> /etc/environment
+RUN echo 'PATH="/opt/python/3.11.4/bin:$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"' >> /etc/environment
 
 # 移除已有的符号链接
 RUN rm -f /usr/bin/python3
 
 # 建立软链接
-RUN ln -s /opt/python/3.12.4/bin/python3.11 /usr/bin/python3
-RUN ln -s /opt/python/3.12.4/bin/python3.11 /usr/bin/python
+RUN ln -s /opt/python/3.11.4/bin/python3.11 /usr/bin/python3
+RUN ln -s /opt/python/3.11.4/bin/python3.11 /usr/bin/python
 
 RUN pip3 install --upgrade pip
 
@@ -132,7 +132,7 @@ if [ ! -f "/etc/enterpoint.env" ]; then \
 fi; \
 echo "success reading /etc/enterpoint.env"; \
 cat /etc/enterpoint.env; \
-echo 'export PATH="/opt/python/3.12.4/bin:$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"' >> /root/.zshrc; \
+echo 'export PATH="/opt/python/3.11.4/bin:$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"' >> /root/.zshrc; \
 service ssh start; \
 service nginx start; \
 tail -f /dev/null
