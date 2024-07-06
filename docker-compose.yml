@@ -21,3 +21,4 @@ services:
       # docker cp ubuntu-test-environment:/etc ./etc
       # docker cp ubuntu-test-environment:/root ./root
       # 复制完成以后，再取消注释那2行，重启容器`docker-compose down && docker-compose up -d`，就会直接用其中的数据
+      # 若密钥改变过了，ssh报错，可先删除当前ip和端口的历史记录: ssh-keygen -R '[x.x.x.x]:2222'

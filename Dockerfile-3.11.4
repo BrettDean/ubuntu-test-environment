@@ -125,10 +125,17 @@ RUN echo "daemon off;" >> /etc/nginx/nginx.conf && \
 
 CMD \
 if [ ! -f "/etc/enterpoint.env" ]; then \
-    echo "/etc/enterpoint.env not exist"; \
+    echo "/etc/enterpoint.env not exist, initialization..."; \
+    ssh-keygen -t rsa -C "root" -f "/root/.ssh/ubuntu-test-environment" -N ""; \
+    PrivateKey=$(cat /root/.ssh/ubuntu-test-environment); \
+    PubKey=$(cat /root/.ssh/ubuntu-test-environment.pub); \
+    touch ~/.ssh/authorized_keys; \
+    chmod 600 ~/.ssh/authorized_keys; \
+    echo "$PubKey" >> ~/.ssh/authorized_keys; \
+    echo "ROOT_PrivateKey:\\n" >> /etc/enterpoint.env; echo "PrivateKey copy start at--->$PrivateKey\\n <---PrivateKey copy end at(copy must exatly end before '<---')" >> /etc/enterpoint.env; \
     ROOT_PASSWORD=$(openssl rand -base64 12); \
     echo "root:$ROOT_PASSWORD" | chpasswd; \
-    echo "ROOT_PASSWORD=$ROOT_PASSWORD" >> /etc/enterpoint.env; \
+    echo "\\nROOT_PASSWORD=$ROOT_PASSWORD" >> /etc/enterpoint.env; \
 fi; \
 echo "success reading /etc/enterpoint.env"; \
 cat /etc/enterpoint.env; \
