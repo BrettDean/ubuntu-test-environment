@@ -1,5 +1,7 @@
 # 一个包含基本命令的ubuntu测试环境容器
 
+类似于微软的Codespaces或者dev container的东西，只不过不用花钱租他的机器
+
 只是为了能有一个环境能放心霍霍，霍霍完了就删
 
 容器内的80端口运行了一个nginx服务器
@@ -29,13 +31,14 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /home:/home # 可选
-      # 持久化
+      # 持久化 # 可选
       # - ./etc:/etc
       # - ./root:/root
       # 第一次启动的时候先把上面2行注释掉，启动后将文件复制出来，用下面这2个命令:
       # docker cp ubuntu-test-environment:/etc ./etc
       # docker cp ubuntu-test-environment:/root ./root
       # 复制完成以后，再取消注释那2行，重启容器`docker-compose down && docker-compose up -d`，就会直接用其中的数据
+      # 若密钥改变过了，ssh报错，可先删除当前ip和端口的历史记录: ssh-keygen -R '[x.x.x.x]:2222'
 
 ```
 
@@ -147,7 +150,8 @@ RUN apt-get update && \
     openjdk-11-jdk \
     nodejs \
     npm \
-    sqlite3
+    sqlite3 \
+    screen
 
 # 安装yarn
 RUN npm install --global yarn
@@ -215,10 +219,17 @@ RUN echo "daemon off;" >> /etc/nginx/nginx.conf && \
 
 CMD \
 if [ ! -f "/etc/enterpoint.env" ]; then \
-    echo "/etc/enterpoint.env not exist"; \
+    echo "/etc/enterpoint.env not exist, initialization..."; \
+    ssh-keygen -t rsa -C "root" -f "/root/.ssh/ubuntu-test-environment" -N ""; \
+    PrivateKey=$(cat /root/.ssh/ubuntu-test-environment); \
+    PubKey=$(cat /root/.ssh/ubuntu-test-environment.pub); \
+    touch ~/.ssh/authorized_keys; \
+    chmod 600 ~/.ssh/authorized_keys; \
+    echo "$PubKey" >> ~/.ssh/authorized_keys; \
+    echo "ROOT_PrivateKey:\\n" >> /etc/enterpoint.env; echo "PrivateKey copy start at--->$PrivateKey\\n <---PrivateKey copy end at(copy must exatly end before '<---')" >> /etc/enterpoint.env; \
     ROOT_PASSWORD=$(openssl rand -base64 12); \
     echo "root:$ROOT_PASSWORD" | chpasswd; \
-    echo "ROOT_PASSWORD=$ROOT_PASSWORD" >> /etc/enterpoint.env; \
+    echo "\\nROOT_PASSWORD=$ROOT_PASSWORD" >> /etc/enterpoint.env; \
 fi; \
 echo "success reading /etc/enterpoint.env"; \
 cat /etc/enterpoint.env; \
