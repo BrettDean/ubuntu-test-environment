@@ -53,16 +53,13 @@ RUN apt-get update && \
     tk-dev \
     zlib1g-dev \
     build-essential \
-    openjdk-11-jdk \
-    nodejs \
+    openjdk-21-jdk \
     npm \
     sqlite3 \
     screen
 
-# 安装yarn
 RUN npm install --global yarn
-
-# 安装vite
+RUN yarn global add @vue/cli
 RUN yarn global add vite
 RUN yarn add @vitejs/plugin-vue --dev
 
@@ -114,9 +111,18 @@ RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/
 RUN apt-get update && \
     apt-get upgrade -y
 
+# 设置 nvm 环境变量
+ENV NVM_DIR /root/.nvm
+
+# 安装 nvm Node.js nrm rimraf
+RUN curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash && \
+    zsh -c "source ~/.nvm/nvm.sh && nvm install node && nvm use node" && \
+    npm install -g nrm rimraf
+
 # 清理安装过程中产生的临时文件
 RUN apt-get clean && \
     apt autoremove -y && \
+    rm -rf /tmp/* /var/tmp/* && \
     rm -rf /tmp/python
 
 # 配置 nginx 使其在前台运行，并启用
