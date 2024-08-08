@@ -1,14 +1,12 @@
 version: '3'
 
-# 查看ssh root密码`docker exec -it ubuntu-test-environment cat /etc/enterpoint.env`
-
 services:
   ubuntu-test-environment:
-    image: brettdean/ubuntu-test-environment:python3.12.4-arm
+    image: brettdean/ubuntu-test-environment:python3.11.4-amd
     container_name: ubuntu-test-environment
     ports:
-      - "2222:22"   # ssh端口
-      - "8880:80"   # nginx端口
+      - "32222:22"   # ssh端口
+      - "34580:80"   # nginx端口
     network_mode: bridge
     hostname: ubuntu-test-environment
     volumes:
@@ -18,7 +16,8 @@ services:
       # - ./etc:/etc
       # - ./root:/root
       # 第一次启动的时候先把上面2行注释掉，启动后将文件复制出来，用下面这2个命令:
-      # docker cp ubuntu-test-environment:/etc ./etc
-      # docker cp ubuntu-test-environment:/root ./root
+      # docker cp ubuntu-test-environment:/etc ./etc && docker cp ubuntu-test-environment:/root ./root
+
       # 复制完成以后，再取消注释那2行，重启容器`docker-compose down && docker-compose up -d`，就会直接用其中的数据
-      # 若密钥改变过了，ssh报错，可先删除当前ip和端口的历史记录: ssh-keygen -R '[x.x.x.x]:2222'
+      # 查看私钥和root密码: `docker exec -it ubuntu-test-environment cat /etc/enterpoint.env`
+      # 若密钥改变过了，ssh报错，可先删除当前ip和端口的历史记录: ssh-keygen -R '[x.x.x.x]:32222'
