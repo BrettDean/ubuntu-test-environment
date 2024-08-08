@@ -92,3 +92,13 @@ ssh root密码可以在`docker logs`查看
 ```bash
 docker build -t brettdean/ubuntu-test-environment:python3.12.4 -f Dockerfile-3.12.4 .
 ```
+
+
+---
+
+## 手动安装vscode-server (可选)
+没有预装vscode-server，如果自动安装失败，可以进容器后手动安装
+```
+/bin/bash -c "$(curl -fsSL https://gist.githubusercontent.com/cvcore/8e187163f41a77f5271c26a870e52778/raw/download_vscode_server.sh)" -- af28b32d7e553898b2a91af498b1fb666fdebe0c
+```
+
