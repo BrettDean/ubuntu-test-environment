@@ -54,8 +54,8 @@ docker-compose up -d
 
 ```bash
 docker run -d --name ubuntu-test-environment \
-    -p 2222:22 \
-    -p 8880:80 \
+    -p 32222:22 \
+    -p 34580:80 \
     --network bridge \
     --hostname ubuntu-test-environment \
     -v /var/run/docker.sock:/var/run/docker.sock \
