@@ -77,7 +77,7 @@ docker exec -it ubuntu-test-environment zsh
 
  - 2.ssh
 ```
-ssh root@172.17.0.1 -p2222
+ssh root@172.17.0.1 -p32222
 ```
 ssh root密码可以在`docker logs`查看
 手动查看ssh root密码`docker exec -it ubuntu-test-environment cat /etc/enterpoint.env`
